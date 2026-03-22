@@ -43,7 +43,7 @@ def extract_text_from_txt(uploaded_file):
 def get_gemini_response(prompt, api_key):
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-1.5-flash which is fast and good for this task
+        # Using gemini-pro as we are encountering 404 errors with 1.5-flash models
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         return response.text
