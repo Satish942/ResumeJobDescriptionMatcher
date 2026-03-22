@@ -1,6 +1,5 @@
 import streamlit as st
 import google.generativeai as genai
-import os
 import json
 import PyPDF2
 from docx import Document
@@ -39,27 +38,64 @@ def extract_text_from_txt(uploaded_file):
         st.error(f"Error reading TXT: {e}")
         return None
 
-# Function to get Gemini Response
-def get_gemini_response(prompt, api_key):
+# Function to dynamically fetch available Gemini models that support generateContent
+@st.cache_data(show_spinner=False)
+def get_available_models(api_key):
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-pro as we are encountering 404 errors with 1.5-flash models
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        models = genai.list_models()
+        # Filter only models that support generateContent and are Gemini models
+        available = [
+            m.name.replace("models/", "")
+            for m in models
+            if "generateContent" in m.supported_generation_methods
+            and "gemini" in m.name
+        ]
+        return sorted(available)
+    except Exception as e:
+        st.sidebar.error(f"Could not fetch models: {e}")
+        return []
+
+# Function to get Gemini Response
+def get_gemini_response(prompt, api_key, model_name):
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(model_name)
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
         st.error(f"Error communicating with Gemini API: {e}")
         return None
 
+
 st.title("📄 AI Resume vs Job Description Matcher")
 st.markdown("Upload your resume and paste the job description to see how well you match!")
 
-# Sidebar for API Key
+# ── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("⚙️ Configuration")
     api_key_input = st.text_input("Enter your Google Gemini API Key", type="password")
     st.markdown("Get an API key from [Google AI Studio](https://aistudio.google.com/)")
 
+    selected_model = None
+
+    if api_key_input:
+        with st.spinner("Fetching available models…"):
+            available_models = get_available_models(api_key_input)
+
+        if available_models:
+            st.success(f"✅ {len(available_models)} model(s) found")
+            selected_model = st.selectbox(
+                "Select Gemini Model",
+                options=available_models,
+                help="These are the models available for your API key that support text generation.",
+            )
+        else:
+            st.warning("No models found. Check your API key or network connection.")
+    else:
+        st.info("Enter your API key above to load available models.")
+
+# ── Main content ──────────────────────────────────────────────────────────────
 st.markdown("---")
 
 col1, col2 = st.columns(2)
@@ -67,7 +103,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("1. Your Resume")
     uploaded_resume = st.file_uploader("Upload Resume (PDF, DOCX, TXT)", type=["pdf", "docx", "txt"])
-    
+
     resume_text = ""
     if uploaded_resume is not None:
         file_extension = uploaded_resume.name.split(".")[-1].lower()
@@ -77,7 +113,7 @@ with col1:
             resume_text = extract_text_from_docx(uploaded_resume)
         elif file_extension == "txt":
             resume_text = extract_text_from_txt(uploaded_resume)
-        
+
         if resume_text:
             st.success("Resume uploaded and parsed successfully!")
             with st.expander("Show extracted resume text"):
@@ -92,12 +128,14 @@ st.markdown("---")
 if st.button("🔍 Analyze Match", type="primary"):
     if not api_key_input:
         st.warning("Please enter your Gemini API Key in the sidebar.")
+    elif not selected_model:
+        st.warning("Please wait for models to load and select one from the sidebar.")
     elif not resume_text:
         st.warning("Please upload a valid resume.")
     elif not job_description.strip():
         st.warning("Please paste a job description.")
     else:
-        with st.spinner("Analyzing resume against job description using AI..."):
+        with st.spinner(f"Analyzing with **{selected_model}**…"):
             prompt = f"""
             You are an expert Applicant Tracking System (ATS) and Technical Recruiter.
             Evaluate the following resume against the provided job description.
@@ -116,24 +154,25 @@ if st.button("🔍 Analyze Match", type="primary"):
             
             Response must be ONLY a valid JSON object.
             """
-            
-            response_text = get_gemini_response(prompt, api_key_input)
-            
+
+            response_text = get_gemini_response(prompt, api_key_input, selected_model)
+
             if response_text:
                 try:
                     # Clean the response in case the model wraps it in markdown blocks
                     cleaned_response = response_text.replace("```json", "").replace("```", "").strip()
                     result = json.loads(cleaned_response)
-                    
+
                     st.subheader("📊 Analysis Results")
-                    
+                    st.caption(f"Powered by model: `{selected_model}`")
+
                     # Display match percentage using a progress bar and metric
                     match_score = result.get("match_percentage", 0)
                     st.metric(label="Match Percentage", value=f"{match_score}%")
                     st.progress(match_score / 100)
-                    
+
                     res_col1, res_col2 = st.columns(2)
-                    
+
                     with res_col1:
                         st.subheader("✅ Matched Skills")
                         matched_skills = result.get("matched_skills", [])
@@ -142,7 +181,7 @@ if st.button("🔍 Analyze Match", type="primary"):
                                 st.markdown(f"- {skill}")
                         else:
                             st.write("No matching skills found.")
-                            
+
                     with res_col2:
                         st.subheader("❌ Missing Skills")
                         missing_skills = result.get("missing_skills", [])
@@ -151,15 +190,15 @@ if st.button("🔍 Analyze Match", type="primary"):
                                 st.markdown(f"- {skill}")
                         else:
                             st.write("No missing skills found!")
-                            
+
                     st.subheader("💡 Improvement Advice")
                     st.info(result.get("improvement_advice", "No advice provided."))
-                    
+
                 except json.JSONDecodeError:
                     st.error("Error parsing the AI response. Please try again.")
                     with st.expander("Show raw AI response"):
                         st.write(response_text)
-                        
+
 # Footer
 st.markdown("---")
-st.markdown("<p style='text-align: center;'>Built with Streamlit & Google Gemini API</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Built with Streamlit &amp; Google Gemini API</p>", unsafe_allow_html=True)
