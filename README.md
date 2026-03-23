@@ -58,6 +58,9 @@ To use the app, you need a Google Gemini API key.
 
 <img width="956" height="565" alt="image" src="https://github.com/user-attachments/assets/04ed8ea7-529b-45eb-9379-c5930c2ad27d" />
 
+<img width="953" height="502" alt="image" src="https://github.com/user-attachments/assets/57701873-2ce4-42d1-91e0-29ccbd5e3465" />
+
+
 
 3. Go to [share.streamlit.io](https://share.streamlit.io/).
 4. Sign in with your GitHub account.
