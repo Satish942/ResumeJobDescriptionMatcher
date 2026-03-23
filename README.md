@@ -49,9 +49,19 @@ To use the app, you need a Google Gemini API key.
 ## How to Deploy to Streamlit Community Cloud
 
 1. Commit all your code (`app.py`, `requirements.txt`, `.gitignore`, `README.md`) and push it to a new public repository on GitHub.
-2. Go to [share.streamlit.io](https://share.streamlit.io/).
-3. Sign in with your GitHub account.
-4. Click **New app**.
-5. Select your repository, branch (usually `main`), and the main file path (`app.py`).
-6. Click **Deploy!**
+
+## screen shots 
+
+<img width="952" height="563" alt="image" src="https://github.com/user-attachments/assets/1a1f658a-8e25-474f-bb38-b9b7d61353f8" />
+
+<img width="959" height="562" alt="image" src="https://github.com/user-attachments/assets/a9547d1a-4ede-4ad8-9c67-b092d8c2d339" />
+
+<img width="956" height="565" alt="image" src="https://github.com/user-attachments/assets/04ed8ea7-529b-45eb-9379-c5930c2ad27d" />
+
+
+3. Go to [share.streamlit.io](https://share.streamlit.io/).
+4. Sign in with your GitHub account.
+5. Click **New app**.
+6. Select your repository, branch (usually `main`), and the main file path (`app.py`).
+7. Click **Deploy!**
 Your app will be live on the internet shortly.
