@@ -58,6 +58,33 @@ To use the app, you need a Google Gemini API key.
 
 <img width="956" height="565" alt="image" src="https://github.com/user-attachments/assets/04ed8ea7-529b-45eb-9379-c5930c2ad27d" />
 
+# Stream lit cloud deployment steps : [https://resume-job-description-match.streamlit.app/]
+Connect and Deploy
+Go to share.streamlit.io.
+
+Sign in with GitHub: Since you're currently having access issues, click Sign Out first, then sign back in using your satish942 GitHub account.
+
+Click the "Create app" button in the top right.
+
+Select "Yup, I have an app".
+
+Fill in the deployment details:
+
+Repository: Select satish942/your-repo-name.
+
+Branch: Usually main or master.
+
+Main file path: app.py (or whatever your main file is named).
+
+(Optional) Click Advanced settings if you need to:
+
+Set the Python version (defaults to 3.12+).
+
+Add Secrets (like API keys or database credentials) that would normally be in a .env file.
+
+Click Deploy!
+
+
 <img width="953" height="502" alt="image" src="https://github.com/user-attachments/assets/57701873-2ce4-42d1-91e0-29ccbd5e3465" />
 
 
