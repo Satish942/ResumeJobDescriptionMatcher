@@ -1,55 +1,46 @@
-# AI Resume vs Job Description Matcher
+# 🛠️ How to Run Locally
+1. Clone the Repository
+Bash
+git clone https://github.com/satish942/ResumeJobDescriptionMatcher.git
+cd ResumeJobDescriptionMatcher
+2. Set Up Virtual Environment (Recommended)
+Bash
+python -m venv venv
 
-This is a Streamlit web application that uses Google's Gemini AI to evaluate a resume against a job description. It provides a match percentage, identifies matching and missing skills, and gives actionable advice for improvement.
+# On Windows:
+venv\Scripts\activate
 
-## Features
-- **Upload Resume**: Supports PDF, DOCX, and TXT files.
-- **Job Description**: Paste the target job description.
-- **AI Analysis**: Uses the Google Gemini API to compare the texts and extract insights.
-- **Results**: 
-  - Match percentage
-  - Matched skills
-  - Missing skills
-  - Improvement advice
+# On macOS/Linux:
+source venv/bin/activate
+3. Install Dependencies
+Bash
+pip install -r requirements.txt
+4. Run the Application
+Bash
+streamlit run app.py
+🔑 Getting a Gemini API Key
+To use the app, you need a Google Gemini API key:
 
-## How to Run Locally
+Go to Google AI Studio.
 
-1. **Clone the repository** (if you've pushed it to GitHub):
-   ```bash
-   git clone <your-github-repo-url>
-   cd ResumeJobDescriptionMatcher
-   ```
+Sign in with your Google account.
 
-2. **Create a virtual environment** (optional but recommended):
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
+Click "Get API key" and create a new key.
 
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+Paste the key into the sidebar of the Streamlit app when prompted.
 
-4. **Run the Streamlit app**:
-   ```bash
-   streamlit run app.py
-   ```
+🌐 Deployment to Streamlit Community Cloud
+Commit & Push: Ensure app.py, requirements.txt, and README.md are pushed to your GitHub repo.
 
-## Getting a Gemini API Key
-To use the app, you need a Google Gemini API key. 
-1. Go to [Google AI Studio](https://aistudio.google.com/).
-2. Sign in with your Google account.
-3. Click "Get API key" and create a new key.
-4. Paste it into the sidebar of the Streamlit app.
+Connect: Go to share.streamlit.io and sign in with your GitHub account (satish942).
 
-## How to Deploy to Streamlit Community Cloud
+New App: Click "Create app" > "Yup, I have an app".
 
-1. Commit all your code (`app.py`, `requirements.txt`, `.gitignore`, `README.md`) and push it to a new public repository on GitHub.
+Configure: * Repository: satish942/ResumeJobDescriptionMatcher
 
+Main file path: app.py
+
+Deploy: Click Deploy! Your app will be live at the URL provided.
 ## screen shots 
 
 <img width="952" height="563" alt="image" src="https://github.com/user-attachments/assets/1a1f658a-8e25-474f-bb38-b9b7d61353f8" />
