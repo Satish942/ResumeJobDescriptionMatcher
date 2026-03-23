@@ -58,7 +58,7 @@ To use the app, you need a Google Gemini API key.
 
 <img width="956" height="565" alt="image" src="https://github.com/user-attachments/assets/04ed8ea7-529b-45eb-9379-c5930c2ad27d" />
 
-# Stream lit cloud deployment steps : [https://resume-job-description-match.streamlit.app/]
+## Stream lit cloud deployment steps : [https://resume-job-description-match.streamlit.app/]
 Connect and Deploy
 Go to share.streamlit.io.
 
